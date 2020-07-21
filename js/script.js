@@ -1,29 +1,71 @@
-const rangeRed = document.querySelector("#rangeRed");
-const rangeGreen = document.querySelector("#rangeGreen");
-const rangeBlue = document.querySelector("#rangeBlue");
+window.addEventListener('load', start);
 
-const textRed = document.querySelector("#textRed");
-const textGreen = document.querySelector("#textGreen");
-const textBlue = document.querySelector("#textBlue");
-
-const vitrine = document.querySelector("#vitrine");
-
-start();
+var elementsRange = [];
+var elementsText = [];
+var valueColorRed = 0;
+var valueColorGreen = 0;
+var valueColorBlue = 0;
 
 function start() {
-  function handleChange() {
-    textRed.value = parseInt(rangeRed.value);
-    textGreen.value = parseInt(rangeGreen.value);
-    textBlue.value = parseInt(rangeBlue.value);
-
-    vitrine.setAttribute(
-      "style",
-      `background-color: rgb(${parseInt(rangeRed.value)}
-                                    ,${parseInt(rangeGreen.value)},
-                                     ${parseInt(rangeBlue.value)})`
-    );
-  }
-  rangeRed.addEventListener("change", handleChange);
-  rangeGreen.addEventListener("change", handleChange);
-  rangeBlue.addEventListener("change", handleChange);
+    createElementsRange();
+    createElementsText();
+    receiveEventElementRange(elementsRange, elementsText);
 }
+
+function createElementsRange() {
+  const rangeRed = document.querySelector("#rangeRed");
+  const rangeGreen = document.querySelector("#rangeGreen");
+  const rangeBlue = document.querySelector("#rangeBlue");
+
+  populateArrayElementsHTML(elementsRange, rangeRed, rangeGreen, rangeBlue);
+}
+
+function createElementsText() {
+  const textRed = document.querySelector("#textRed");
+  const textGreen = document.querySelector("#textGreen");
+  const textBlue = document.querySelector("#textBlue");
+
+  populateArrayElementsHTML(elementsText, textRed, textGreen, textBlue);
+}
+
+function populateArrayElementsHTML(vectorToBeFilled, ...elements) {
+    let currentElementHTML = null;
+    for(let index = 0; index < elements.length; index++) {
+      currentElementHTML = elements[index]
+      vectorToBeFilled.push(currentElementHTML);
+    }
+    return vectorToBeFilled;
+}
+
+function receiveEventElementRange(elementsRange, elementsText) {
+    const [rangeRed, rangeGreen, rangeBlue] = elementsRange;
+    const [textRed, textGreen, textBlue] = elementsText;
+
+    rangeRed.addEventListener('input', () => {
+      valueColorRed = parseInt(rangeRed.value);
+      textRed.value = valueColorRed;
+      renderVitrineColor(valueColorRed, valueColorGreen, valueColorBlue);
+    });
+
+    rangeGreen.addEventListener('input', () => {
+      valueColorGreen = parseInt(rangeGreen.value);
+      textGreen.value = valueColorGreen;   
+      renderVitrineColor(valueColorRed, valueColorGreen, valueColorBlue);
+    });
+
+    rangeBlue.addEventListener('input', () => {
+      valueColorBlue = parseInt(rangeBlue.value);
+      textBlue.value = valueColorBlue;
+      renderVitrineColor(valueColorRed, valueColorGreen, valueColorBlue);
+    });
+}
+
+function renderVitrineColor(rangeRed, rangeGreen, rangeBlue) {
+  const vitrine = document.querySelector("#vitrine");
+  
+  vitrine.setAttribute(
+    "style",
+    `background-color: rgb(${rangeRed}, ${rangeGreen}, ${rangeBlue})`
+  );
+}
+
